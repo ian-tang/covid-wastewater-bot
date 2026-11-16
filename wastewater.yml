@@ -1,0 +1,21 @@
+name: RI wastewater to Slack
+
+on:
+  schedule:
+    - cron: "0 14 * * 2,4,6"  # Tue, Thu, Sat at 14:00 UTC (9am EST / 10am EDT)
+  workflow_dispatch:           # adds a "Run workflow" button for manual runs
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Post activity level
+        run: python wastewater_bot.py
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
